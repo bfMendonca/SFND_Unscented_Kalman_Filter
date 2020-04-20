@@ -142,11 +142,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       P_ *= 1.0;
 
       //Melhor setup
-      P_(0.0) = std_laspx_*std_laspx_*0.33;
-      P_(1.1) = std_laspy_*std_laspy_*0.33;
-      P_(2.2) = 2.0;
-      P_(3.3) = 0.01;
-      P_(4.4) = 0.7;
+      P_(0,0) = std_laspx_*std_laspx_;
+      P_(1,1) = std_laspy_*std_laspy_;
+      P_(2,2) = 4.0;  //Expectning 2m/s of difference. 
+      P_(3,3) = 0.01; //Expecting 6 deg, abs, from the expected state
+      P_(4,4) = 1e-4;
 
       // P_(0.0) = std_laspx_*std_laspx_*100;
       // P_(1.1) = std_laspy_*std_laspy_*100;
