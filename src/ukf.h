@@ -1,6 +1,8 @@
 #ifndef UKF_H
 #define UKF_H
 
+#include <iostream>
+
 #include "Eigen/Dense"
 #include "measurement_package.h"
 
@@ -40,6 +42,21 @@ class UKF {
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+
+  /**
+    * This is a utilitary method, It only implements the equations for the CTRV model in order
+    * for it to be used for different procedure inside the filter. Usage mainly for the state
+    * update and for predicting the sigma points transform. 
+    * For the reason above, this method is self contained, receiving an input and an output and
+    * will not change any of the classses state variables and, therefore, is also a const method
+  **/
+  Eigen::VectorXd UpdateState( const Eigen::VectorXd &x, const Eigen::VectorXd & nu, double dt ) const;
+
+  /**
+    * This method will use the filter parameters in order to predict the sigma points.
+    */
+  void GenerateSigmaPoints( );
 
 
   // initially set to false, set to true in first call of ProcessMeasurement
@@ -84,6 +101,9 @@ class UKF {
   // Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
+  //The sigma points used for an given cycle for the filter
+  Eigen::MatrixXd sigma_points_;
+
   // Weights of sigma points
   Eigen::VectorXd weights_;
 
@@ -95,6 +115,13 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
+
+  bool first_lidar;
+  bool first_radar;
+
+  // Covariance matrices
+  Eigen::MatrixXd R_radar_;
+  Eigen::MatrixXd R_lidar_;
 };
 
 #endif  // UKF_H
